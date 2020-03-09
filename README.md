@@ -1,5 +1,5 @@
 # V A P O R W A V E
-A ｖａｐｏｒｗａｖｅ music (+art, +video soon, I promise) generator bodged together using code from various sources ( Hopefully I have credited all of them in the source code). Runs on Python3
+A ｖａｐｏｒｗａｖｅ music (+art, +video soon, I promise) generator bodged together using code from various sources. Runs on Python3
 
 ## Installation
 
@@ -45,3 +45,8 @@ This project is a result of bodging and therefore has tons of bugs which need to
 [ ] Clean the Code
 [ ] Add Artwork Generator
 [ ] Add Video Generator
+
+## Credits
+
+@WJLiddy His repo `Macintech` forms the base code for the music generator
+@felipecustodio Using his repo `virtualdreamsbot` YouTube DL code ( Hopefully I will be able to integrate this project as a Telegram Bot)
