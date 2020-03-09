@@ -1,4 +1,4 @@
-# V A P O R W A V E
+# ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄
 A ｖａｐｏｒｗａｖｅ music (+art, +video soon, I promise) generator bodged together using code from various sources. Runs on Python3
 
 ## Installation
