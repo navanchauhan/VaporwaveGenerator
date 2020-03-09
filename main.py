@@ -8,8 +8,30 @@ from logzero import setup_logger
 import re
 import urllib.request
 import urllib.parse
-
+import argparse
 import time
+
+version = 1.0
+style = False
+
+text = 'This program takes YouTube URL or title of a song and converts it into vaporwave'
+
+parser = argparse.ArgumentParser(description = text)
+parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")
+parser.add_argument("-V", "--version", help="show program version", action="store_true")
+parser.add_argument("-i", "--input", help="input url")
+
+args = parser.parse_args()
+
+if args.version:
+	print("ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄", version)
+	exit
+if args.music:
+	music = True
+if args.input:
+	query = args.url
+else:
+	query = input("Enter target song's name or YouTube URL: ")
 
 MAX_DURATION = 600 # In-case the program finds a compilation
 youtube_urls = ('youtube.com', 'https://www.youtube.com/', 'http://www.youtube.com/', 'http://youtu.be/', 'https://youtu.be/', 'youtu.be')
@@ -116,12 +138,14 @@ def gen_vapor(filePath, title):
 	os.system("rm -r beats/")
 
 
-	
+"""	
 ## Makes this a command line tool: disable when we get the webserver going
 sys.argv.pop(0)
 query = ""
 for s in sys.argv:
 	query = query + s
+"""
 
-name, title = download_file(query)
-gen_vapor(name, title)
+if music:
+    name, title = download_file(query)
+    gen_vapor(name, title)
