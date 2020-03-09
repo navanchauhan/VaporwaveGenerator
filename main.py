@@ -29,7 +29,7 @@ if args.version:
 if args.music:
 	music = True
 if args.input:
-	query = args.url
+	query = args.input
 else:
 	query = input("Enter target song's name or YouTube URL: ")
 
