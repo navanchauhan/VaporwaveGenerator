@@ -1,4 +1,5 @@
-from VaporSong import VaporSong
+from src.VaporSong import VaporSong
+from src.VHSImage import generateVHSStyle
 import os
 import sys
 import youtube_dl
@@ -18,20 +19,28 @@ text = 'This program takes YouTube URL or title of a song and converts it into v
 
 parser = argparse.ArgumentParser(description = text)
 parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")
+parser.add_argument("-P", "--picture", help="generate VHS Style image", action="store_true")
 parser.add_argument("-V", "--version", help="show program version", action="store_true")
-parser.add_argument("-i", "--input", help="input url")
+parser.add_argument("-i", "--input")
+
 
 args = parser.parse_args()
+
+music = False
+picture = False
 
 if args.version:
 	print("ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄", version)
 	exit
 if args.music:
 	music = True
+elif args.picture:
+    picture = True
 if args.input:
 	query = args.input
 else:
-	query = input("Enter target song's name or YouTube URL: ")
+    parser.print_help()
+    exit
 
 MAX_DURATION = 600 # In-case the program finds a compilation
 youtube_urls = ('youtube.com', 'https://www.youtube.com/', 'http://www.youtube.com/', 'http://youtu.be/', 'https://youtu.be/', 'youtu.be')
@@ -149,3 +158,6 @@ for s in sys.argv:
 if music:
     name, title = download_file(query)
     gen_vapor(name, title)
+elif picture:
+    generateVHSStyle(query,"out.jpg")
+    
