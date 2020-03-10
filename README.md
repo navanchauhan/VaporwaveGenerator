@@ -37,6 +37,7 @@ Make sure you have brew installed
 brew install noah # I would have had to re-compile the executeable :(
 brew install sox
 pip install -r requirements.txt
+```
 
 ## Usage
 
