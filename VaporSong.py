@@ -85,7 +85,9 @@ class VaporSong:
 				tocomb.append(sample)
 		tocomb.append(dest)
 		tmpFileLimit = len(tocomb) + 256 # in case the program messes up, it does not actually frick up your system
-		os.system("ulimit -n " + str(tmpFileLimit))
+		n = str(tmpFileLimit)
+		#logger.info("Setting file limit to ", n)
+		os.system("ulimit -n " + n)
 		subprocess.check_output(tocomb)
 		return dest
 

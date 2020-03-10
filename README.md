@@ -15,6 +15,8 @@ optional arguments:
                         input url
 ```
 
+If the program gives an error for sox, try running `ulimit -n 999'`
+
 ## Installation
 
 This was tested on macOS Catalina ( so should work on almost all macOS versions).
