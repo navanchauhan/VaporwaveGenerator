@@ -16,7 +16,7 @@ import time
 version = 2.0
 style = False
 
-text = 'This program takes YouTube URL or title of a song and converts it into vaporwave'
+text = '| V A P O R W A V E || G E N E R A T O R |'
 
 parser = argparse.ArgumentParser(description = text)
 parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")

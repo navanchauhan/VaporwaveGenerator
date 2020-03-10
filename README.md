@@ -3,18 +3,19 @@
 A ｖａｐｏｒｗａｖｅ music + image + video (+art soon, I promise) generator bodged together using code from various sources. Runs on Python 3. VHSVideo option is really really slow (Seconds per frame is 7.)
 
 ```
-usage: main.py [-h] [-M] [-P] [-V] [-i INPUT]
+usage: main.py [-h] [-M] [-P] [-V] [-v] [-i INPUT] [-o OUTPUT]
 
-This program takes YouTube URL or title of a song and converts it into
-vaporwave
+| V A P O R W A V E || G E N E R A T O R |
 
 optional arguments:
   -h, --help            show this help message and exit
   -M, --music           generate v a p o r w a v e music
   -P, --picture         generate VHS Style image
-  -V, --version         show program version
+  -V, --video           VHS Style Video
+  -v, --version         show program version
   -i INPUT, --input INPUT
-
+  -o OUTPUT, --output OUTPUT
+                        Output for specifying output video
 ```
 
 If the program gives an error for sox, try running `ulimit -n 999'`
@@ -37,7 +38,7 @@ Linking to Bandcamp soon
 
 ### V H S  V I D E O
 
-See the in.mp4 and out.mp4 in the assets folder
+See `in.mp4` and `out.mp4` in the `assets` folder
 
 ## Installation
 
@@ -91,7 +92,7 @@ This project is a result of bodging and therefore has tons of bugs which need to
 There might be a problem with the generated video not having audio, for that run the following 
 
 `ffmpeg -i video.mp4 -vn -acodec copy output-audio.aac`
-`ffmpeg -i output.mp4 -i output-audio.aac -c copy output-with-audio.mp4'
+`ffmpeg -i output.mp4 -i output-audio.aac -c copy output-with-audio.mp4`
 
 
 ## To-Do
