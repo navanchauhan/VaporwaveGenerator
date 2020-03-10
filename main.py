@@ -12,7 +12,7 @@ import urllib.parse
 import argparse
 import time
 
-version = 1.0
+version = 1.5
 style = False
 
 text = 'This program takes YouTube URL or title of a song and converts it into vaporwave'
