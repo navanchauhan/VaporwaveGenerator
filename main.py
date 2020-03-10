@@ -1,5 +1,6 @@
 from src.VaporSong import VaporSong
 from src.VHSImage import generateVHSStyle
+from src.VHSVideo import VHS_Vid
 import os
 import sys
 import youtube_dl
@@ -12,7 +13,7 @@ import urllib.parse
 import argparse
 import time
 
-version = 1.5
+version = 2.0
 style = False
 
 text = 'This program takes YouTube URL or title of a song and converts it into vaporwave'
@@ -20,14 +21,17 @@ text = 'This program takes YouTube URL or title of a song and converts it into v
 parser = argparse.ArgumentParser(description = text)
 parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")
 parser.add_argument("-P", "--picture", help="generate VHS Style image", action="store_true")
-parser.add_argument("-V", "--version", help="show program version", action="store_true")
+parser.add_argument("-V","--video", help="VHS Style Video", action="store_true")
+parser.add_argument("-v", "--version", help="show program version", action="store_true")
 parser.add_argument("-i", "--input")
+parser.add_argument("-o","--output", help="Output for specifying output video")
 
 
 args = parser.parse_args()
 
 music = False
 picture = False
+video = False
 
 if args.version:
 	print("ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄", version)
@@ -36,8 +40,12 @@ if args.music:
 	music = True
 elif args.picture:
     picture = True
+elif args.video:
+    video = True
 if args.input:
 	query = args.input
+if args.output:
+    outfile = args.output
 else:
     parser.print_help()
     exit
@@ -160,4 +168,6 @@ if music:
     gen_vapor(name, title)
 elif picture:
     generateVHSStyle(query,"out.jpg")
+elif video:
+    VHS_Vid(query, outfile)
     

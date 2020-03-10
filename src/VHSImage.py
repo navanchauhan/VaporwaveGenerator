@@ -146,25 +146,39 @@ if __name__ == "__main__":
     build_background("bkg.jpg", 25)
 """    
 
-def generateVHSStyle(infile, outfile):
-    cut_rows = bool(random.getrandbits(1))
-    offset = random.choice([0,5,10,15,20,25])
-    logger.info("Saturating the image")
-    offset_hue(infile,"saturated.jpg")
-    if cut_rows:
-        logger.info("Shifting the image")
-        mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
+def generateVHSStyle(infile, outfile, silence=False):
+    if silence:
+        cut_rows = bool(random.getrandbits(1))
+        offset = random.choice([0,5,10,15,20,25])
+        offset_hue(infile,"saturated.jpg")
+        if cut_rows:
+            mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
+        else:
+            mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
+        add_date("shifted.jpg","noisy.jpg")
+        add_date("noisy.jpg",outfile, bottom_offset=offset)
+        os.remove("shifted.jpg")
+        os.remove("saturated.jpg")
+        os.remove("noisy.jpg")
     else:
-        logger.info("Not applying lines effect")
-        mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
-    logger.info("Adding noise")
-    add_date("shifted.jpg","noisy.jpg")
-    logger.info("Adding text")
-    add_date("noisy.jpg",outfile, bottom_offset=offset)
-    logger.info("Generated Image: out.jpg")
-    logger.info("Removing residual files")
-    os.remove("shifted.jpg")
-    os.remove("saturated.jpg")
-    os.remove("noisy.jpg")
+        cut_rows = bool(random.getrandbits(1))
+        offset = random.choice([0,5,10,15,20,25])
+        logger.info("Saturating the image")
+        offset_hue(infile,"saturated.jpg")
+        if cut_rows:
+            logger.info("Shifting the image")
+            mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
+        else:
+            logger.info("Not applying lines effect")
+            mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
+        logger.info("Adding noise")
+        add_date("shifted.jpg","noisy.jpg")
+        logger.info("Adding text")
+        add_date("noisy.jpg",outfile, bottom_offset=offset)
+        logger.info("Generated Image: out.jpg")
+        logger.info("Removing residual files")
+        os.remove("shifted.jpg")
+        os.remove("saturated.jpg")
+        os.remove("noisy.jpg")
 
 #generateVHSStyle("s.jpg","o.jpg")

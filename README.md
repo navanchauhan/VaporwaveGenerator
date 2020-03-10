@@ -1,6 +1,6 @@
 # ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄
 
-A ｖａｐｏｒｗａｖｅ music (+art, +video soon, I promise) generator bodged together using code from various sources. Runs on Python3
+A ｖａｐｏｒｗａｖｅ music + image + video (+art soon, I promise) generator bodged together using code from various sources. Runs on Python 3. VHSVideo option is really really slow (Seconds per frame is 7.)
 
 ```
 usage: main.py [-h] [-M] [-P] [-V] [-i INPUT]
@@ -35,6 +35,10 @@ Linking to Bandcamp soon
 
 ![](assets/out-vhs.jpg?raw=true "Output VHS")
 
+### V H S  V I D E O
+
+See the in.mp4 and out.mp4 in the assets folder
+
 ## Installation
 
 This was tested on macOS Catalina ( so should work on almost all macOS versions).
@@ -45,7 +49,7 @@ Windows is unsupported at this time ( I need to find a way to use aubio's python
 #### Linux
 
 ```
-sudo apt install ffmpeg libavl1 sox
+sudo apt install ffmpeg ffprobe libavl1 sox
 pip install -r requirements.txt
 ```
 
@@ -76,9 +80,19 @@ python3 main.py -M -i Song Title
 
 `python3 main.py -P -i "image.jpg"`
 
+### V H S  V I D E O
+
+`python3 main.py -V -i "video.mp4" -o "output.mp4"`
+
 ## Bugs
 
-This project is a result of bodging and therefore has tons of bugs which need to be ironed out
+This project is a result of bodging and therefore has tons of bugs which need to be ironed out. I need to swat some bugs in the VHSVideo file.
+
+There might be a problem with the generated video not having audio, for that run the following 
+
+`ffmpeg -i video.mp4 -vn -acodec copy output-audio.aac`
+`ffmpeg -i output.mp4 -i output-audio.aac -c copy output-with-audio.mp4'
+
 
 ## To-Do
 
@@ -86,7 +100,7 @@ This project is a result of bodging and therefore has tons of bugs which need to
 [] Clean the Code
 [] Add Artwork Generator
 [x] VHS Picture Styler ( Added in v1.5 )
-[] Add Video Generator
+[x] Add Video Generator
 [] Add Custom Date to VHS Styler
 
 ## Credits
