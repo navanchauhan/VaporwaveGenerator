@@ -27,9 +27,9 @@ Linking to Bandcamp soon
 
 ### V H S  I M A G E
 
-![]("assets/in-vhs.jpg")
+![]("https://raw.githubusercontent.com/navanchauhan/VaporwaveGenerator/master/assets/in-vhs.jpg")
 
-![]("assets/out-vhs.jpg")
+![]("https://raw.githubusercontent.com/navanchauhan/VaporwaveGenerator/master/assets/out-vhs.jpg")
 
 ## Installation
 
