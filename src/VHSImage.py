@@ -56,18 +56,6 @@ def hueChange(img, offset):
 def decision(probability):
     return random.random() < probability
 
-def getImage(out_name="image.jpg"):
-    now = datetime.datetime.now()
-    dt_str = now.strftime("%Y-%m-%dT%H:%M:%Sz")
-    newurl = url.format(WIDTH=3840, HEIGHT=2160, DATE=dt_str)
-    r = requests.get(newurl)
-    img_data = r.json()["batchrsp"]["items"][0]
-    # ["ad"]["image_fullscreen_001_landscape"]["u"]
-    img_url = json.loads(img_data["item"])["ad"]["image_fullscreen_001_landscape"]["u"]
-    r = requests.get(img_url)
-    with open(out_name, "wb") as f:
-        f.write(r.content)
-
 def mod_image_repeat_rows(imgname, chance_of_row_repeat=0, max_row_repeats=0, min_row_repeats=0, save=True, out_name="image.jpg"):
     img = Image.open(imgname)
     pixels = img.load()
@@ -149,7 +137,7 @@ if __name__ == "__main__":
 def generateVHSStyle(infile, outfile, silence=False):
     if silence:
         cut_rows = bool(random.getrandbits(1))
-        offset = random.choice([0,5,10,15,20,25])
+        offset = random.choice([0,5,10])
         offset_hue(infile,"saturated.jpg")
         if cut_rows:
             mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
