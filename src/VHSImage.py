@@ -21,7 +21,6 @@ def generate_offsets(array_size, max_offset):
     periodicity = random.random() * periodicity
     offsets = []
     for i in range(array_size):
-        # print(floor(max_offset*np.sin(periodicity*(i*np.pi/180))))
         offsets.append(floor(max_offset*np.sin(periodicity*(i*np.pi/180))))
     return offsets
 
@@ -39,11 +38,8 @@ def hueChange(img, offset):
     offset = offset/100.
     for rd, gr, bl in zip(r.getdata(), g.getdata(), b.getdata()):
         h, s, v = colorsys.rgb_to_hsv(rd/255.0, bl/255.0, gr/255.0)
-        # print(h, s, v)
-        # print(rd, gr, bl)
         rgb = colorsys.hsv_to_rgb(h, s+offset, v)
         rd, bl, gr = [int(x*255.) for x in rgb]
-        # print(rd, gr, bl)
         r_data.append(rd)
         g_data.append(gr)
         b_data.append(bl)
