@@ -46,7 +46,7 @@ See `in.mp4` and `out.mp4` in the `assets` folder
 
 #### Output
 
-1[](assets/out.gif?raw=true "Output Video")
+![](assets/out.gif?raw=true "Output Video")
 
 
 ## Installation
