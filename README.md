@@ -40,6 +40,15 @@ Linking to Bandcamp soon
 
 See `in.mp4` and `out.mp4` in the `assets` folder
 
+#### Input
+
+![](assets/in.gif?raw=true "Input Video")
+
+#### Output
+
+1[](assets/out.gif?raw=true "Output Video")
+
+
 ## Installation
 
 This was tested on macOS Catalina ( so should work on almost all macOS versions).
