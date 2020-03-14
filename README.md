@@ -24,7 +24,9 @@ If the program gives an error for sox, try running `ulimit -n 999'`
 
 ### M U S I C
 
-Linking to Bandcamp soon
+Sample Album:
+
+https://www.bandlab.com/programming_psychic/albums/844f21a0-fa65-ea11-a94c-0003ffd19c0f
 
 ### V H S  I M A G E
 
