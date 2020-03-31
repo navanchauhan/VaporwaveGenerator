@@ -1,5 +1,7 @@
 youtube_dl
+requests
 logzero
 pillow
 imageio
 numpy
+opencv-python
