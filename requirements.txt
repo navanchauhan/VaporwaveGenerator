@@ -1,7 +1,5 @@
 youtube_dl
 logzero
-urllib
-re
-PIL
-imagio
+pillow
+imageio
 numpy
