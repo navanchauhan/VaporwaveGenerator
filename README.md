@@ -18,7 +18,7 @@ optional arguments:
                         Output for specifying output video
 ```
 
-If the program gives an error for sox, try running `ulimit -n 999'`
+If the program gives an error for sox, try running `ulimit -n 999'`. You may also need to run `chmod +x get-beats`
 
 ## Demo
 
