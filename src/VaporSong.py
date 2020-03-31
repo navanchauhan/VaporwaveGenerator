@@ -54,7 +54,7 @@ class VaporSong:
 		if platform == 'darwin':
 			beats = subprocess.check_output(["noah", "get-beats",src]).rstrip()
 		else:
-			beats = subprocess.check_output(["get-beats",src]).rstrip()
+			beats = subprocess.check_output(["./get-beats",src]).rstrip()
 		beats_ary = beats.splitlines()
 		for i in beats_ary:
 			record = i.split()
