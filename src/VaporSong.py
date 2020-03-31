@@ -3,6 +3,8 @@ import subprocess
 import re
 from random import randint
 
+from sys import platform
+
 import logzero
 from logzero import logger
 from logzero import setup_logger
@@ -49,7 +51,7 @@ class VaporSong:
 	# TODO: Move away from executable and use aubio's Python module
 	def fetchbeats(src):
 		beat_matrix = []
-		if os.name == 'posix':
+		if platform == 'darwin':
 			beats = subprocess.check_output(["noah", "get-beats",src]).rstrip()
 		else:
 			beats = subprocess.check_output(["get-beats",src]).rstrip()
