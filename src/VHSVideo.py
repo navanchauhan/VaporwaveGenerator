@@ -2,11 +2,8 @@ import os
 import cv2
 from src.VHSImage import generateVHSStyle
 from os.path import isfile, join
-import numpy as np
 import subprocess
-import logzero
 from logzero import logger
-from logzero import setup_logger
 
 
 def SaveVid(path):
