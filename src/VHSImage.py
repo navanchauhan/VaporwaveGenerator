@@ -1,18 +1,14 @@
-import requests
 import datetime
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 import colorsys
-import json
 import numpy as np
 import imageio
 import random
 from math import floor
 import os
-import logzero
 from logzero import logger
-from logzero import setup_logger
 import random
 
 

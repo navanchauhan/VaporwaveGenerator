@@ -4,10 +4,7 @@ import re
 from random import randint
 
 from sys import platform
-
-import logzero
 from logzero import logger
-from logzero import setup_logger
 
 CONFIDENCE_THRESH = 0.02
 

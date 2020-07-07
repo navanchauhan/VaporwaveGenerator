@@ -2,16 +2,12 @@ from src.VaporSong import VaporSong
 from src.VHSImage import generateVHSStyle
 from src.VHSVideo import VHS_Vid
 import os
-import sys
 import youtube_dl
-import logzero
 from logzero import logger
-from logzero import setup_logger
 import re
 import urllib.request
 import urllib.parse
 import argparse
-import time
 
 version = 2.0
 style = False
