@@ -2,7 +2,7 @@ import requests
 import datetime
 from PIL import Image
 from PIL import ImageFont
-from PIL import ImageDraw 
+from PIL import ImageDraw
 import colorsys
 import json
 import numpy as np
@@ -21,7 +21,7 @@ def generate_offsets(array_size, max_offset):
     periodicity = random.random() * periodicity
     offsets = []
     for i in range(array_size):
-        offsets.append(floor(max_offset*np.sin(periodicity*(i*np.pi/180))))
+        offsets.append(floor(max_offset * np.sin(periodicity * (i * np.pi / 180))))
     return offsets
 
 
@@ -35,11 +35,11 @@ def hueChange(img, offset):
     g_data = []
     b_data = []
 
-    offset = offset/100.
+    offset = offset / 100.0
     for rd, gr, bl in zip(r.getdata(), g.getdata(), b.getdata()):
-        h, s, v = colorsys.rgb_to_hsv(rd/255.0, bl/255.0, gr/255.0)
-        rgb = colorsys.hsv_to_rgb(h, s+offset, v)
-        rd, bl, gr = [int(x*255.) for x in rgb]
+        h, s, v = colorsys.rgb_to_hsv(rd / 255.0, bl / 255.0, gr / 255.0)
+        rgb = colorsys.hsv_to_rgb(h, s + offset, v)
+        rd, bl, gr = [int(x * 255.0) for x in rgb]
         r_data.append(rd)
         g_data.append(gr)
         b_data.append(bl)
@@ -47,12 +47,21 @@ def hueChange(img, offset):
     r.putdata(r_data)
     g.putdata(g_data)
     b.putdata(b_data)
-    return Image.merge('RGB',(r,g,b))
+    return Image.merge("RGB", (r, g, b))
+
 
 def decision(probability):
     return random.random() < probability
 
-def mod_image_repeat_rows(imgname, chance_of_row_repeat=0, max_row_repeats=0, min_row_repeats=0, save=True, out_name="image.jpg"):
+
+def mod_image_repeat_rows(
+    imgname,
+    chance_of_row_repeat=0,
+    max_row_repeats=0,
+    min_row_repeats=0,
+    save=True,
+    out_name="image.jpg",
+):
     img = Image.open(imgname)
     pixels = img.load()
     width, height = img.size
@@ -80,7 +89,7 @@ def mod_image_repeat_rows(imgname, chance_of_row_repeat=0, max_row_repeats=0, mi
                     pixels[x, y] = row_to_repeat[x - offsets[num_repeats]]
             else:
                 pixels[x, y] = (r, g, b)
-        
+
         if repeat:
             num_repeats += 1
             if num_repeats >= times_to_repeat:
@@ -102,15 +111,27 @@ def add_date(img_path, out_name="image.jpg", bottom_offset=0):
     width, height = img.size
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("src/VCR_OSD_MONO_1.001.ttf", 64)
-    draw.text((corner_offset, (height-150-bottom_offset)), date_str_1, (255, 255, 255), font=font)
-    draw.text((corner_offset, (height-75)-bottom_offset), date_str_2, (255, 255, 255), font=font)
+    draw.text(
+        (corner_offset, (height - 150 - bottom_offset)),
+        date_str_1,
+        (255, 255, 255),
+        font=font,
+    )
+    draw.text(
+        (corner_offset, (height - 75) - bottom_offset),
+        date_str_2,
+        (255, 255, 255),
+        font=font,
+    )
     draw.text((corner_offset, 25), "|| PAUSE", (255, 255, 255), font=font)
     img.save(out_name)
 
+
 def add_img_noise(imgpath, intensity=1, out_name="image.jpg"):
-    img = imageio.imread(imgpath, pilmode='RGB')
+    img = imageio.imread(imgpath, pilmode="RGB")
     noise1 = img + intensity * img.std() * np.random.random(img.shape)
     imageio.imwrite(out_name, noise1)
+
 
 def offset_hue(image, out_name="image.jpg"):
     if isinstance(image, str):
@@ -118,37 +139,40 @@ def offset_hue(image, out_name="image.jpg"):
         image = hueChange(image, 25)
         image.save(out_name)
 
+
 def build_background(out_name, taskbar_offset):
-    #getImage(out_name="start.jpg")
+    # getImage(out_name="start.jpg")
     offset_hue("start.jpg", out_name="saturated.jpg")
     mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, out_name="shifted.jpg")
     add_img_noise("shifted.jpg", out_name="noisy.jpg")
     add_date("noisy.jpg", out_name=out_name, bottom_offset=taskbar_offset)
 
+
 """
 if __name__ == "__main__":
     build_background("bkg.jpg", 25)
-"""    
+"""
+
 
 def generateVHSStyle(infile, outfile, silence=False):
     if silence:
         cut_rows = bool(random.getrandbits(1))
-        offset = random.choice([0,5,10])
-        offset_hue(infile,"saturated.jpg")
+        offset = random.choice([0, 5, 10])
+        offset_hue(infile, "saturated.jpg")
         if cut_rows:
             mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
         else:
             mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
-        add_date("shifted.jpg","noisy.jpg")
-        add_date("noisy.jpg",outfile, bottom_offset=offset)
+        add_date("shifted.jpg", "noisy.jpg")
+        add_date("noisy.jpg", outfile, bottom_offset=offset)
         os.remove("shifted.jpg")
         os.remove("saturated.jpg")
         os.remove("noisy.jpg")
     else:
         cut_rows = bool(random.getrandbits(1))
-        offset = random.choice([0,5,10,15,20,25])
+        offset = random.choice([0, 5, 10, 15, 20, 25])
         logger.info("Saturating the image")
-        offset_hue(infile,"saturated.jpg")
+        offset_hue(infile, "saturated.jpg")
         if cut_rows:
             logger.info("Shifting the image")
             mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
@@ -156,13 +180,14 @@ def generateVHSStyle(infile, outfile, silence=False):
             logger.info("Not applying lines effect")
             mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
         logger.info("Adding noise")
-        add_date("shifted.jpg","noisy.jpg")
+        add_date("shifted.jpg", "noisy.jpg")
         logger.info("Adding text")
-        add_date("noisy.jpg",outfile, bottom_offset=offset)
+        add_date("noisy.jpg", outfile, bottom_offset=offset)
         logger.info("Generated Image: out.jpg")
         logger.info("Removing residual files")
         os.remove("shifted.jpg")
         os.remove("saturated.jpg")
         os.remove("noisy.jpg")
 
-#generateVHSStyle("s.jpg","o.jpg")
+
+# generateVHSStyle("s.jpg","o.jpg")

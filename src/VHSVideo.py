@@ -8,16 +8,18 @@ import logzero
 from logzero import logger
 from logzero import setup_logger
 
-def SaveVid(path): 
-	vidObj = cv2.VideoCapture(path) 
-	count = 0
-	success = 1
-	while success: 
-		success, image = vidObj.read() 
-		cv2.imwrite("frames/"+str(count)+".jpg", image) 
-		#os.rename("frames/"+str(count)+".jpg", os.path.splitext("frames/"+str(count)+".jpg")[0])
-		count += 1
-    
+
+def SaveVid(path):
+    vidObj = cv2.VideoCapture(path)
+    count = 0
+    success = 1
+    while success:
+        success, image = vidObj.read()
+        cv2.imwrite("frames/" + str(count) + ".jpg", image)
+        # os.rename("frames/"+str(count)+".jpg", os.path.splitext("frames/"+str(count)+".jpg")[0])
+        count += 1
+
+
 def Style(pathToFrames):
     files = [f for f in os.listdir(pathToFrames) if isfile(join(pathToFrames, f))]
     count = 0
@@ -26,7 +28,7 @@ def Style(pathToFrames):
         f = str(i)
         fi = pathToFrames + f
         out = fi + ".jpg"
-        
+
         generateVHSStyle(fi, out, silence=True)
         os.rename(out, fi)
         print("--------")
@@ -41,29 +43,42 @@ def Style(pathToFrames):
     os.system(c)
     os.chdir(cwd)
 
+
 def generateVideo(outfile, path, infile):
     frame_array = []
     files = [int(f) for f in os.listdir(path) if isfile(join(path, f))]
     files.sort()
 
-    duration = subprocess.check_output(['ffprobe', '-i', infile, '-show_entries', 'format=duration', '-v', 'quiet', '-of', 'csv=%s' % ("p=0")])
-    fps = len(files)/float(duration)
+    duration = subprocess.check_output(
+        [
+            "ffprobe",
+            "-i",
+            infile,
+            "-show_entries",
+            "format=duration",
+            "-v",
+            "quiet",
+            "-of",
+            "csv=%s" % ("p=0"),
+        ]
+    )
+    fps = len(files) / float(duration)
     print("FPS", fps)
 
     for i in range(len(files)):
-        filename=path + str(files[i])
+        filename = path + str(files[i])
         img = cv2.imread(filename)
         height, width, layers = img.shape
-        size = (width,height)
+        size = (width, height)
         frame_array.append(img)
-    out = cv2.VideoWriter(outfile,cv2.VideoWriter_fourcc(*'MP4V'), fps, size)
+    out = cv2.VideoWriter(outfile, cv2.VideoWriter_fourcc(*"MP4V"), fps, size)
     for i in range(len(frame_array)):
         out.write(frame_array[i])
     out.release()
 
 
 def VHS_Vid(infile, outfile):
-    path = './frames/'
+    path = "./frames/"
     os.system("rm frames/*")
     os.system("mkdir frames")
     logger.info("Exctracting Frames")
@@ -84,4 +99,4 @@ def VHS_Vid(infile, outfile):
     os.remove("output-audio.aac")
 
 
-#VHS_Vid("video.mp4","video2.mp4")
+# VHS_Vid("video.mp4","video2.mp4")
