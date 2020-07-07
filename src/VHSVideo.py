@@ -65,7 +65,7 @@ def generateVideo(outfile, path, infile):
     for i in range(len(files)):
         filename = path + str(files[i])
         img = cv2.imread(filename)
-        height, width, layers = img.shape
+        height, width, _ = img.shape
         size = (width, height)
         frame_array.append(img)
     out = cv2.VideoWriter(outfile, cv2.VideoWriter_fourcc(*"MP4V"), fps, size)

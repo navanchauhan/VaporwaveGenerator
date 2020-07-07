@@ -81,7 +81,7 @@ def mod_image_repeat_rows(
             elif repeat:
                 try:
                     pixels[x, y] = row_to_repeat[x + offsets[num_repeats]]
-                except Exception as e:
+                except Exception:
                     pixels[x, y] = row_to_repeat[x - offsets[num_repeats]]
             else:
                 pixels[x, y] = (r, g, b)
@@ -104,7 +104,7 @@ def add_date(img_path, out_name="image.jpg", bottom_offset=0):
     date_str_2 = date_obj.strftime("%b. %d %Y")
     corner_offset = 50
     img = Image.open(img_path)
-    width, height = img.size
+    _, height = img.size
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("src/VCR_OSD_MONO_1.001.ttf", 64)
     draw.text(
