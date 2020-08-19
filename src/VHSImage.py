@@ -5,7 +5,6 @@ from PIL import ImageDraw
 import colorsys
 import numpy as np
 import imageio
-import random
 from math import floor
 import os
 import logzero
