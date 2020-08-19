@@ -109,11 +109,11 @@ There might be a problem with the generated video not having audio, for that run
 ## To-Do
 
 - [ ] Move away from using os.system calls, and use Python modules instead ( Looking at you, Sox and aubio)
-- [ ] Clean the Code
+- [x] Clean the Code
 - [ ] Add Artwork Generator
 - [x] VHS Picture Styler ( Added in v1.5 )
 - [x] Add Video Generator
-- [ ] Add Custom Date to VHS Styler
+- [x] Add Custom Date to VHS Styler
 
 ## Credits
 

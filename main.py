@@ -9,7 +9,7 @@ import urllib.request
 import urllib.parse
 import argparse
 
-version = 2.1
+version = 2.5
 style = False
 
 text = "| V A P O R W A V E || G E N E R A T O R |"
