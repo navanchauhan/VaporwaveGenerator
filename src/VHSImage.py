@@ -8,6 +8,7 @@ import imageio
 import random
 from math import floor
 import os
+import logzero
 from logzero import logger
 import random
 
@@ -98,14 +99,15 @@ def mod_image_repeat_rows(
         img.save(out_name)
 
 
-def add_date(img_path, out_name="image.jpg", bottom_offset=0,date=None,time=None):
+def add_date(img_path, out_name="image.jpg", bottom_offset=0,date=None,time="00:00"):
     if date==None:
         date_obj = datetime.now()
         date_str_1 = date_obj.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     else:
         date_obj = datetime.strptime(date, '%Y/%m/%d')
-        date_str_1 = date_obj.strftime("%p %H:%M")
+        date_obj2 = datetime.strptime(time,'%H:%M')
+        date_str_1 = date_obj2.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     corner_offset = 50
     img = Image.open(img_path)
@@ -155,40 +157,28 @@ if __name__ == "__main__":
 """
 
 
-def generateVHSStyle(infile, outfile, silence=False,date=None):
-    if silence:
-        cut_rows = bool(random.getrandbits(1))
-        offset = random.choice([0, 5, 10])
-        offset_hue(infile, "saturated.jpg")
-        if cut_rows:
-            mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
-        else:
-            mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
-        add_date("shifted.jpg", "noisy.jpg",date=date)
-        add_date("noisy.jpg", outfile, bottom_offset=offset)
-        os.remove("shifted.jpg")
-        os.remove("saturated.jpg")
-        os.remove("noisy.jpg")
+def generateVHSStyle(infile, outfile, verbose=True,date=None,time="00:00"):
+    if not verbose:
+        logzero.loglevel(level=0)
+    cut_rows = bool(random.getrandbits(1))
+    offset = random.choice([0, 5, 10, 15, 20, 25])
+    logger.info("Saturating the image")
+    offset_hue(infile, "saturated.jpg")
+    if cut_rows:
+        logger.info("Shifting the image")
+        mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
     else:
-        cut_rows = bool(random.getrandbits(1))
-        offset = random.choice([0, 5, 10, 15, 20, 25])
-        logger.info("Saturating the image")
-        offset_hue(infile, "saturated.jpg")
-        if cut_rows:
-            logger.info("Shifting the image")
-            mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
-        else:
-            logger.info("Not applying lines effect")
-            mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
-        logger.info("Adding noise")
-        add_date("shifted.jpg", "noisy.jpg",date=date)
-        logger.info("Adding text")
-        add_date("noisy.jpg", outfile, bottom_offset=offset)
-        logger.info("Generated Image: out.jpg")
-        logger.info("Removing residual files")
-        os.remove("shifted.jpg")
-        os.remove("saturated.jpg")
-        os.remove("noisy.jpg")
+        logger.info("Not applying lines effect")
+        mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
+    logger.info("Adding noise")
+    add_date("shifted.jpg", "noisy.jpg",date=date,time=time)
+    logger.info("Adding text")
+    add_date("noisy.jpg", outfile, bottom_offset=offset,date=date,time=time)
+    logger.info("Generated Image")
+    logger.info("Removing residual files")
+    os.remove("shifted.jpg")
+    os.remove("saturated.jpg")
+    os.remove("noisy.jpg")
 
 
 # generateVHSStyle("s.jpg","o.jpg")

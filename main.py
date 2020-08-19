@@ -22,6 +22,7 @@ parser.add_argument("-v", "--version", help="show program version", action="stor
 parser.add_argument("-i", "--input")
 parser.add_argument("-o", "--output", help="Output for specifying output video")
 parser.add_argument("-d","--date",help="Custom Date in yyyy/mm/dd format. e.g 2020/5/14")
+parser.add_argument("-t","--time",help="Custom Time in HH:MM format. e.g 11:23")
 
 
 args = parser.parse_args()
@@ -30,6 +31,7 @@ music = False
 picture = False
 video = False
 date = None
+time = None
 
 if args.version:
     print("ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄", version)
@@ -46,6 +48,8 @@ if args.output:
     outfile = args.output
 if args.date:
     date = args.date
+if args.time:
+    time = args.time
 else:
     parser.print_help()
     exit
@@ -180,6 +184,6 @@ if music:
     name, title = download_file(query)
     gen_vapor(name, title)
 elif picture:
-    generateVHSStyle(query, "out.jpg",date=date)
+    generateVHSStyle(query, "out.jpg",date=date,time=time)
 elif video:
-    VHS_Vid(query, outfile)
+    VHS_Vid(query, outfile,date=date,time=time)

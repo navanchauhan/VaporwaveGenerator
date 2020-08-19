@@ -17,7 +17,7 @@ def SaveVid(path):
         count += 1
 
 
-def Style(pathToFrames):
+def Style(pathToFrames,date=None,time="00:00"):
     files = [f for f in os.listdir(pathToFrames) if isfile(join(pathToFrames, f))]
     count = 0
     for i in files:
@@ -26,7 +26,7 @@ def Style(pathToFrames):
         fi = pathToFrames + f
         out = fi + ".jpg"
 
-        generateVHSStyle(fi, out, silence=True)
+        generateVHSStyle(fi, out, verbose=False,date=date,time=time)
         os.rename(out, fi)
         print("--------")
         print("On Frame: ")
@@ -74,7 +74,7 @@ def generateVideo(outfile, path, infile):
     out.release()
 
 
-def VHS_Vid(infile, outfile):
+def VHS_Vid(infile, outfile,date=None,time="00:00"):
     path = "./frames/"
     os.system("rm frames/*")
     os.system("mkdir frames")
@@ -84,7 +84,7 @@ def VHS_Vid(infile, outfile):
     except:
         logger.debug("Extracted Frames")
     logger.info("Applying A E S T H E T I C S")
-    Style(path)
+    Style(path,date=date,time=time)
     logger.info("Generating Vidio")
     generateVideo("temp.mp4", path, infile)
     logger.info("Extracting audio of original video")
