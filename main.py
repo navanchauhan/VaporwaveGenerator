@@ -15,14 +15,20 @@ style = False
 text = "| V A P O R W A V E || G E N E R A T O R |"
 
 parser = argparse.ArgumentParser(description=text)
-parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")
-parser.add_argument("-P", "--picture", help="generate VHS Style image", action="store_true")
+parser.add_argument(
+    "-M", "--music", help="generate  v a p o r w a v e  music", action="store_true"
+)
+parser.add_argument(
+    "-P", "--picture", help="generate VHS Style image", action="store_true"
+)
 parser.add_argument("-V", "--video", help="VHS Style Video", action="store_true")
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
 parser.add_argument("-i", "--input")
 parser.add_argument("-o", "--output", help="Output for specifying output video")
-parser.add_argument("-d","--date",help="Custom Date in yyyy/mm/dd format. e.g 2020/5/14")
-parser.add_argument("-t","--time",help="Custom Time in HH:MM format. e.g 11:23")
+parser.add_argument(
+    "-d", "--date", help="Custom Date in yyyy/mm/dd format. e.g 2020/5/14"
+)
+parser.add_argument("-t", "--time", help="Custom Time in HH:MM format. e.g 11:23")
 
 
 args = parser.parse_args()
@@ -184,6 +190,6 @@ if music:
     name, title = download_file(query)
     gen_vapor(name, title)
 elif picture:
-    generateVHSStyle(query, "out.jpg",date=date,time=time)
+    generateVHSStyle(query, "out.jpg", date=date, time=time)
 elif video:
-    VHS_Vid(query, outfile,date=date,time=time)
+    VHS_Vid(query, outfile, date=date, time=time)

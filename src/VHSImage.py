@@ -99,14 +99,14 @@ def mod_image_repeat_rows(
         img.save(out_name)
 
 
-def add_date(img_path, out_name="image.jpg", bottom_offset=0,date=None,time="00:00"):
-    if date==None:
+def add_date(img_path, out_name="image.jpg", bottom_offset=0, date=None, time="00:00"):
+    if date == None:
         date_obj = datetime.now()
         date_str_1 = date_obj.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     else:
-        date_obj = datetime.strptime(date, '%Y/%m/%d')
-        date_obj2 = datetime.strptime(time,'%H:%M')
+        date_obj = datetime.strptime(date, "%Y/%m/%d")
+        date_obj2 = datetime.strptime(time, "%H:%M")
         date_str_1 = date_obj2.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     corner_offset = 50
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 """
 
 
-def generateVHSStyle(infile, outfile, verbose=True,date=None,time="00:00"):
+def generateVHSStyle(infile, outfile, verbose=True, date=None, time="00:00"):
     if not verbose:
         logzero.loglevel(level=0)
     cut_rows = bool(random.getrandbits(1))
@@ -171,9 +171,9 @@ def generateVHSStyle(infile, outfile, verbose=True,date=None,time="00:00"):
         logger.info("Not applying lines effect")
         mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
     logger.info("Adding noise")
-    add_date("shifted.jpg", "noisy.jpg",date=date,time=time)
+    add_date("shifted.jpg", "noisy.jpg", date=date, time=time)
     logger.info("Adding text")
-    add_date("noisy.jpg", outfile, bottom_offset=offset,date=date,time=time)
+    add_date("noisy.jpg", outfile, bottom_offset=offset, date=date, time=time)
     logger.info("Generated Image")
     logger.info("Removing residual files")
     os.remove("shifted.jpg")
