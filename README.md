@@ -3,7 +3,9 @@
 A ｖａｐｏｒｗａｖｅ music + image + video (+art soon, I promise) generator bodged together using code from various sources. Runs on Python 3. VHSVideo option is really really slow (Seconds per frame is 7.)
 
 ```
-usage: main.py [-h] [-M] [-P] [-V] [-v] [-i INPUT] [-o OUTPUT]
+ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄 2.5
+usage: main.py [-h] [-M] [-P] [-V] [-v] [-i INPUT] [-o OUTPUT] [-d DATE]
+               [-t TIME]
 
 | V A P O R W A V E || G E N E R A T O R |
 
@@ -16,6 +18,8 @@ optional arguments:
   -i INPUT, --input INPUT
   -o OUTPUT, --output OUTPUT
                         Output for specifying output video
+  -d DATE, --date DATE  Custom Date in yyyy/mm/dd format. e.g 2020/5/14
+  -t TIME, --time TIME  Custom Time in HH:MM format. e.g 11:23                   
 ```
 
 If the program gives an error for sox, try running `ulimit -n 999'`. You may also need to run `chmod +x get-beats`
