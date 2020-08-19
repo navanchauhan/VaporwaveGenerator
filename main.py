@@ -9,22 +9,19 @@ import urllib.request
 import urllib.parse
 import argparse
 
-version = 2.0
+version = 2.1
 style = False
 
 text = "| V A P O R W A V E || G E N E R A T O R |"
 
 parser = argparse.ArgumentParser(description=text)
-parser.add_argument(
-    "-M", "--music", help="generate  v a p o r w a v e  music", action="store_true"
-)
-parser.add_argument(
-    "-P", "--picture", help="generate VHS Style image", action="store_true"
-)
+parser.add_argument("-M", "--music", help="generate  v a p o r w a v e  music", action="store_true")
+parser.add_argument("-P", "--picture", help="generate VHS Style image", action="store_true")
 parser.add_argument("-V", "--video", help="VHS Style Video", action="store_true")
 parser.add_argument("-v", "--version", help="show program version", action="store_true")
 parser.add_argument("-i", "--input")
 parser.add_argument("-o", "--output", help="Output for specifying output video")
+parser.add_argument("-d","--date",help="Custom Date in yyyy/mm/dd format. e.g 2020/5/14")
 
 
 args = parser.parse_args()
@@ -32,6 +29,7 @@ args = parser.parse_args()
 music = False
 picture = False
 video = False
+date = None
 
 if args.version:
     print("ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄", version)
@@ -46,6 +44,8 @@ if args.input:
     query = args.input
 if args.output:
     outfile = args.output
+if args.date:
+    date = args.date
 else:
     parser.print_help()
     exit
@@ -180,6 +180,6 @@ if music:
     name, title = download_file(query)
     gen_vapor(name, title)
 elif picture:
-    generateVHSStyle(query, "out.jpg")
+    generateVHSStyle(query, "out.jpg",date=date)
 elif video:
     VHS_Vid(query, outfile)
