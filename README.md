@@ -1,17 +1,17 @@
 # ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄
 
-A ｖａｐｏｒｗａｖｅ music + image + video (+art soon, I promise) generator bodged together using code from various sources. Runs on Python 3. VHSVideo option is really really slow (Seconds per frame is 7.)
+A ｖａｐｏｒｗａｖｅ music + image + video (+art soon, I promise) generator bodged together using code from various sources. Runs on Python 3. VHSVideo option is really really slow.
 
 ```
-ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄 2.5
-usage: main.py [-h] [-M] [-P] [-V] [-v] [-i INPUT] [-o OUTPUT] [-d DATE]
-               [-t TIME]
+ｖａｐｏｒｗａｖｅ　ｇｅｎｅｒａｔｏｒ　旺育栄 2.7
+usage: vaporwave-generator [-h] [-M | -P | -V] [-v] [-i INPUT] [-o OUTPUT]
+                           [-d DATE] [-t TIME]
 
 | V A P O R W A V E || G E N E R A T O R |
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -M, --music           generate v a p o r w a v e music
+  -M, --music           generate  v a p o r w a v e  music
   -P, --picture         generate VHS Style image
   -V, --video           VHS Style Video
   -v, --version         show program version
@@ -19,10 +19,72 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Output for specifying output video
   -d DATE, --date DATE  Custom Date in yyyy/mm/dd format. e.g 2020/5/14
-  -t TIME, --time TIME  Custom Time in HH:MM format. e.g 11:23                   
+  -t TIME, --time TIME  Custom Time in HH:MM format. e.g 11:23
 ```
 
-If the program gives an error for sox, try running `ulimit -n 999'`. You may also need to run `chmod +x get-beats`
+Music mode downloads audio with `yt-dlp`, then uses Python audio processing to slow it down, detect beats, rearrange beat sections, and add reverb. Image mode adds saturation, VHS row glitches, noise, timestamp text, and a pause overlay. Video mode extracts frames with OpenCV, applies the image effect to each frame, rebuilds the video, and merges the original audio back with `ffmpeg`.
+
+## Installation
+
+Install system tools:
+
+### Linux
+
+```bash
+sudo apt install ffmpeg
+```
+
+### macOS
+
+```bash
+brew install ffmpeg uv
+```
+
+Install Python dependencies:
+
+```bash
+uv sync
+```
+
+The old `get-beats` Linux binary, aubio, noah, and Sox are no longer required. Music transformations now run through the Python code in `src/VaporSong.py`.
+
+## Usage
+
+```bash
+uv run vaporwave-generator --help
+```
+
+### M U S I C
+
+```bash
+uv run vaporwave-generator -M -i "<YOUTUBE_URL>"
+uv run vaporwave-generator -M -i "Song Title"
+```
+
+### V H S  I M A G E S
+
+```bash
+uv run vaporwave-generator -P -i "image.jpg"
+uv run vaporwave-generator -P -i "image.jpg" -d 2020/5/14 -t 11:23
+```
+
+The image output is written to `out.jpg`.
+
+### V H S  V I D E O
+
+```bash
+uv run vaporwave-generator -V -i "video.mp4" -o "output.mp4"
+```
+
+Video styling is slow because it applies the full image pipeline to every extracted frame.
+
+## Development
+
+Run tests with:
+
+```bash
+uv run --extra dev pytest
+```
 
 ## Demo
 
@@ -44,7 +106,7 @@ https://www.bandlab.com/programming_psychic/albums/844f21a0-fa65-ea11-a94c-0003f
 
 ### V H S  V I D E O
 
-See `in.mp4` and `out.mp4` in the `assets` folder
+See `in.mp4` and `out.mp4` in the `assets` folder.
 
 #### Input
 
@@ -54,75 +116,21 @@ See `in.mp4` and `out.mp4` in the `assets` folder
 
 ![](assets/out.gif?raw=true "Output Video")
 
-
-## Installation
-
-This was tested on macOS Catalina ( so should work on almost all macOS versions).
-Windows is unsupported at this time ( I need to find a way to use aubio's python module)
-
-### Dependencies
-
-#### Linux
-
-```
-sudo apt install ffmpeg ffprobe libavl1 sox
-pip install -r requirements.txt
-```
-
-#### macOS
-
-Make sure you have brew installed
-
-```
-brew install noah # I would have had to re-compile the executeable :(
-brew install sox
-pip install -r requirements.txt
-```
-
-## Usage
-
-### M U S I C
-
-#### YouTube URL
-```
-python3 main.py -M -i <YOUTUBE_URL>
-```
-#### Song Title
-```
-python3 main.py -M -i Song Title
-```
-
-### V H S  I M A G E S
-
-`python3 main.py -P -i "image.jpg"`
-
-### V H S  V I D E O
-
-`python3 main.py -V -i "video.mp4" -o "output.mp4"`
-
-## Bugs
-
-This project is a result of bodging and therefore has tons of bugs which need to be ironed out. I need to swat some bugs in the VHSVideo file.
-
-There might be a problem with the generated video not having audio, for that run the following 
-
-`ffmpeg -i video.mp4 -vn -acodec copy output-audio.aac`
-`ffmpeg -i output.mp4 -i output-audio.aac -c copy output-with-audio.mp4`
-
-
 ## To-Do
 
-- [ ] Move away from using os.system calls, and use Python modules instead ( Looking at you, Sox and aubio)
-- [x] Clean the Code
-- [ ] Add Artwork Generator
-- [x] VHS Picture Styler ( Added in v1.5 )
-- [x] Add Video Generator
-- [x] Add Custom Date to VHS Styler
+- [x] Replace `get-beats` binary with Python beat detection
+- [x] Replace Sox music transforms with Python audio processing
+- [x] Move Python dependency management to `uv`
+- [x] Clean up CLI argument handling
+- [x] Add VHS picture styler
+- [x] Add video generator
+- [x] Add custom date to VHS styler
+- [ ] Add artwork generator
 
 ## Credits
 
-@WJLiddy His repo `Macintech` forms the base code for the music generator
+@WJLiddy His repo `Macintech` forms the base code for the music generator.
 
-@felipecustodio Using his repo `virtualdreamsbot` YouTube DL code ( Hopefully I will be able to integrate this project as a Telegram Bot)
+@felipecustodio Using his repo `virtualdreamsbot` YouTube downloader code.
 
-@Ragex04 His repo `VHS_BingImages` forms the base code for the VHS Image Styler
+@Ragex04 His repo `VHS_BingImages` forms the base code for the VHS image styler.

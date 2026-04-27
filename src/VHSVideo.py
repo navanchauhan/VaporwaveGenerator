@@ -1,50 +1,53 @@
-import os
-import cv2
-from src.VHSImage import generateVHSStyle
-from os.path import isfile, join
+import shutil
 import subprocess
+from pathlib import Path
+
+import cv2
 from logzero import logger
 
+from src.VHSImage import generateVHSStyle
 
-def SaveVid(path):
-    vidObj = cv2.VideoCapture(path)
+
+def SaveVid(path, frame_dir="frames"):
+    frame_path = Path(frame_dir)
+    vid_obj = cv2.VideoCapture(path)
     count = 0
-    success = 1
-    while success:
-        success, image = vidObj.read()
-        cv2.imwrite("frames/" + str(count) + ".jpg", image)
-        # os.rename("frames/"+str(count)+".jpg", os.path.splitext("frames/"+str(count)+".jpg")[0])
+    while True:
+        success, image = vid_obj.read()
+        if not success:
+            break
+        cv2.imwrite(str(frame_path / f"{count}.jpg"), image)
         count += 1
+    vid_obj.release()
+    return count
 
 
-def Style(pathToFrames,date=None,time="00:00"):
-    files = [f for f in os.listdir(pathToFrames) if isfile(join(pathToFrames, f))]
-    count = 0
-    for i in files:
-        count += 1
-        f = str(i)
-        fi = pathToFrames + f
-        out = fi + ".jpg"
-
-        generateVHSStyle(fi, out, verbose=False,date=date,time=time)
-        os.rename(out, fi)
+def Style(path_to_frames, date=None, time="00:00"):
+    frame_path = Path(path_to_frames)
+    files = sorted(
+        [path for path in frame_path.iterdir() if path.is_file()],
+        key=lambda path: int(path.stem),
+    )
+    for count, frame in enumerate(files, start=1):
+        out = frame.with_suffix(frame.suffix + ".styled.jpg")
+        generateVHSStyle(str(frame), str(out), verbose=False, date=date, time=time)
+        out.replace(frame)
         print("--------")
         print("On Frame: ")
         print(count)
         print("Out of")
         print(len(files))
         print("--------")
-    cwd = os.getcwd()
-    os.chdir(pathToFrames)
-    c = "find ./ -name \"*.jpg\" -exec sh -c 'mv $0 `basename \"$0\" .jpg`' '{}' \;    ;"
-    os.system(c)
-    os.chdir(cwd)
 
 
 def generateVideo(outfile, path, infile):
-    frame_array = []
-    files = [int(f) for f in os.listdir(path) if isfile(join(path, f))]
-    files.sort()
+    frame_path = Path(path)
+    files = sorted(
+        [path for path in frame_path.iterdir() if path.is_file()],
+        key=lambda path: int(path.stem),
+    )
+    if not files:
+        raise ValueError("No frames were extracted from the input video.")
 
     duration = subprocess.check_output(
         [
@@ -56,44 +59,59 @@ def generateVideo(outfile, path, infile):
             "-v",
             "quiet",
             "-of",
-            "csv=%s" % ("p=0"),
-        ]
+            "csv=p=0",
+        ],
+        text=True,
     )
     fps = len(files) / float(duration)
     print("FPS", fps)
 
-    for i in range(len(files)):
-        filename = path + str(files[i])
-        img = cv2.imread(filename)
-        height, width, _ = img.shape
-        size = (width, height)
-        frame_array.append(img)
-    out = cv2.VideoWriter(outfile, cv2.VideoWriter_fourcc(*"MP4V"), fps, size)
-    for i in range(len(frame_array)):
-        out.write(frame_array[i])
-    out.release()
-
-
-def VHS_Vid(infile, outfile,date=None,time="00:00"):
-    path = "./frames/"
-    os.system("rm frames/*")
-    os.system("mkdir frames")
-    logger.info("Exctracting Frames")
+    first = cv2.imread(str(files[0]))
+    height, width, _ = first.shape
+    size = (width, height)
+    out = cv2.VideoWriter(outfile, cv2.VideoWriter_fourcc(*"mp4v"), fps, size)
     try:
-        SaveVid(infile)
-    except:
-        logger.debug("Extracted Frames")
-    logger.info("Applying A E S T H E T I C S")
-    Style(path,date=date,time=time)
-    logger.info("Generating Vidio")
-    generateVideo("temp.mp4", path, infile)
-    logger.info("Extracting audio of original video")
-    os.system("ffmpeg -i %(infile)s -vn -acodec copy output-audio.aac")
-    logger.info("Merging audio")
-    os.system("ffmpeg -i temp.mp4 -i output-audio.aac -c copy %(outfile)s")
-    logger.info("Removing residual files")
-    os.remove("temp.mp4")
-    os.remove("output-audio.aac")
+        for frame in files:
+            img = cv2.imread(str(frame))
+            out.write(img)
+    finally:
+        out.release()
 
 
-# VHS_Vid("video.mp4","video2.mp4")
+def VHS_Vid(infile, outfile, date=None, time="00:00"):
+    path = Path("frames")
+    shutil.rmtree(path, ignore_errors=True)
+    path.mkdir()
+    try:
+        logger.info("Extracting frames")
+        SaveVid(infile, str(path))
+        logger.info("Applying A E S T H E T I C S")
+        Style(str(path), date=date, time=time)
+        logger.info("Generating video")
+        generateVideo("temp.mp4", str(path), infile)
+        logger.info("Merging audio")
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-y",
+                "-i",
+                "temp.mp4",
+                "-i",
+                infile,
+                "-map",
+                "0:v:0",
+                "-map",
+                "1:a:0?",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "aac",
+                "-shortest",
+                outfile,
+            ],
+            check=True,
+        )
+    finally:
+        logger.info("Removing residual files")
+        Path("temp.mp4").unlink(missing_ok=True)
+        Path("output-audio.aac").unlink(missing_ok=True)

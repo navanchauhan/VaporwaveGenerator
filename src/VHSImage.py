@@ -10,6 +10,7 @@ import os
 import logzero
 from logzero import logger
 import random
+import tempfile
 
 
 def generate_offsets(array_size, max_offset):
@@ -98,14 +99,14 @@ def mod_image_repeat_rows(
         img.save(out_name)
 
 
-def add_date(img_path, out_name="image.jpg", bottom_offset=0,date=None,time="00:00"):
-    if date==None:
+def add_date(img_path, out_name="image.jpg", bottom_offset=0, date=None, time="00:00"):
+    if date is None:
         date_obj = datetime.now()
         date_str_1 = date_obj.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     else:
-        date_obj = datetime.strptime(date, '%Y/%m/%d')
-        date_obj2 = datetime.strptime(time,'%H:%M')
+        date_obj = datetime.strptime(date, "%Y/%m/%d")
+        date_obj2 = datetime.strptime(time, "%H:%M")
         date_str_1 = date_obj2.strftime("%p %H:%M")
         date_str_2 = date_obj.strftime("%b. %d %Y")
     corner_offset = 50
@@ -129,10 +130,11 @@ def add_date(img_path, out_name="image.jpg", bottom_offset=0,date=None,time="00:
     img.save(out_name)
 
 
-def add_img_noise(imgpath, intensity=1, out_name="image.jpg"):
+def add_img_noise(imgpath, intensity=0.08, out_name="image.jpg"):
     img = imageio.imread(imgpath, pilmode="RGB")
-    noise1 = img + intensity * img.std() * np.random.random(img.shape)
-    imageio.imwrite(out_name, noise1)
+    noise = intensity * img.std() * np.random.standard_normal(img.shape)
+    noisy = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+    imageio.imwrite(out_name, noisy)
 
 
 def offset_hue(image, out_name="image.jpg"):
@@ -156,28 +158,28 @@ if __name__ == "__main__":
 """
 
 
-def generateVHSStyle(infile, outfile, verbose=True,date=None,time="00:00"):
+def generateVHSStyle(infile, outfile, verbose=True, date=None, time="00:00"):
     if not verbose:
         logzero.loglevel(level=0)
     cut_rows = bool(random.getrandbits(1))
     offset = random.choice([0, 5, 10, 15, 20, 25])
-    logger.info("Saturating the image")
-    offset_hue(infile, "saturated.jpg")
-    if cut_rows:
-        logger.info("Shifting the image")
-        mod_image_repeat_rows("saturated.jpg", 0.012, 50, 10, True, "shifted.jpg")
-    else:
-        logger.info("Not applying lines effect")
-        mod_image_repeat_rows("saturated.jpg", 0, 0, 0, True, "shifted.jpg")
-    logger.info("Adding noise")
-    add_date("shifted.jpg", "noisy.jpg",date=date,time=time)
-    logger.info("Adding text")
-    add_date("noisy.jpg", outfile, bottom_offset=offset,date=date,time=time)
-    logger.info("Generated Image")
-    logger.info("Removing residual files")
-    os.remove("shifted.jpg")
-    os.remove("saturated.jpg")
-    os.remove("noisy.jpg")
+    with tempfile.TemporaryDirectory(prefix="vaporwave-vhs-") as tmpdir:
+        saturated = os.path.join(tmpdir, "saturated.jpg")
+        shifted = os.path.join(tmpdir, "shifted.jpg")
+        noisy = os.path.join(tmpdir, "noisy.jpg")
+        logger.info("Saturating the image")
+        offset_hue(infile, saturated)
+        if cut_rows:
+            logger.info("Shifting the image")
+            mod_image_repeat_rows(saturated, 0.012, 50, 10, True, shifted)
+        else:
+            logger.info("Not applying lines effect")
+            mod_image_repeat_rows(saturated, 0, 0, 0, True, shifted)
+        logger.info("Adding noise")
+        add_img_noise(shifted, out_name=noisy)
+        logger.info("Adding text")
+        add_date(noisy, outfile, bottom_offset=offset, date=date, time=time)
+        logger.info("Generated Image")
 
 
 # generateVHSStyle("s.jpg","o.jpg")
